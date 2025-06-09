@@ -51,6 +51,7 @@ namespace CoachingProject
                         : (Scores.Length > 0 && Scores[^1] == 'H'
                             ? throw new InvalidOperationException("Cannot cancel away goal when last event is home goal.")
                             : (Scores.EndsWith("A") ? Scores[..^1] : Scores)),
+                MatchEvent.NextPeriod => Scores + ";",
                 _ => Scores
             };
         }

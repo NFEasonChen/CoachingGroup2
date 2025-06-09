@@ -180,6 +180,23 @@ namespace CoachingProject.Tests
             _matchRepo.Received(1).GetMatch(MatchId);
         }
 
+        [Test]
+        public void UpdateMatch_WhenNextPeriod_AppendsSemicolon()
+        {
+            // Arrange
+            SetupMatch(MatchId, "HA");
+            SetupUpdateMatch(MatchId, "HA;");
+            var matchEvent = MatchEvent.NextPeriod;
+
+            // Act
+            var result = _controller.UpdateMatch(MatchId, matchEvent);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("1:1 (Second Half)"));
+            _matchRepo.Received(1).UpdateMatch(MatchId, "HA;");
+            _matchRepo.Received(1).GetMatch(MatchId);
+        }
+
         [TearDown]
         public void TearDown()
         {
