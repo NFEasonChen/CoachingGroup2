@@ -1,8 +1,4 @@
-using System.Reflection.Metadata;
-using NUnit.Framework;
-using CoachingProject;
 using NSubstitute;
-using System;
 
 namespace CoachingProject.Tests
 {
