@@ -124,6 +124,62 @@ namespace CoachingProject.Tests
             _matchRepo.Received(1).GetMatch(MatchId);
         }
 
+        [Test]
+        public void UpdateMatch_WhenCancelAwayGoal_InFH_From0to1()
+        {
+            // Arrange
+            SetupMatch(MatchId, "A");
+            SetupUpdateMatch(MatchId, string.Empty);
+            var matchEvent = MatchEvent.CancelAwayGoal;
+
+            // Act
+            var result = _controller.UpdateMatch(MatchId, matchEvent);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("0:0 (First Half)"));
+            _matchRepo.Received(1).UpdateMatch(MatchId, string.Empty);
+            _matchRepo.Received(1).GetMatch(MatchId);
+        }
+
+        [Test]
+        public void UpdateMatch_WhenCancelAwayGoal_LastIsHomeGoal_ThrowsException()
+        {
+            // Arrange
+            SetupMatch(MatchId, "H");
+            var matchEvent = MatchEvent.CancelAwayGoal;
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => _controller.UpdateMatch(MatchId, matchEvent));
+        }
+
+        [Test]
+        public void UpdateMatch_WhenCancelAwayGoal_LastIsSemicolonAndBeforeIsHomeGoal_ThrowsException()
+        {
+            // Arrange
+            SetupMatch(MatchId, "H;");
+            var matchEvent = MatchEvent.CancelAwayGoal;
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => _controller.UpdateMatch(MatchId, matchEvent));
+        }
+
+        [Test]
+        public void UpdateMatch_WhenCancelAwayGoal_LastIsSemicolonAndBeforeIsAwayGoal_RemovesAwayGoal()
+        {
+            // Arrange
+            SetupMatch(MatchId, "A;");
+            SetupUpdateMatch(MatchId, ";");
+            var matchEvent = MatchEvent.CancelAwayGoal;
+
+            // Act
+            var result = _controller.UpdateMatch(MatchId, matchEvent);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("0:0 (Second Half)"));
+            _matchRepo.Received(1).UpdateMatch(MatchId, ";");
+            _matchRepo.Received(1).GetMatch(MatchId);
+        }
+
         [TearDown]
         public void TearDown()
         {

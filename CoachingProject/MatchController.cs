@@ -31,6 +31,16 @@ namespace CoachingProject
                         : (matchScore.Length > 0 && matchScore[^1] == 'A'
                             ? throw new InvalidOperationException("Cannot cancel home goal when last event is away goal.")
                             : (matchScore.EndsWith("H") ? matchScore[..^1] : matchScore)),
+                MatchEvent.CancelAwayGoal =>
+                    matchScore.Length > 0 && matchScore[^1] == ';'
+                        ? (matchScore.Length > 1 && matchScore[^2] == 'H'
+                            ? throw new InvalidOperationException("Cannot cancel away goal when last event is home goal.")
+                            : (matchScore.Length > 1 && matchScore[^2] == 'A'
+                                ? matchScore.Remove(matchScore.Length - 2, 1)
+                                : matchScore))
+                        : (matchScore.Length > 0 && matchScore[^1] == 'H'
+                            ? throw new InvalidOperationException("Cannot cancel away goal when last event is home goal.")
+                            : (matchScore.EndsWith("A") ? matchScore[..^1] : matchScore)),
                 _ => matchScore
             };
 
