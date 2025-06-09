@@ -17,7 +17,7 @@ namespace CoachingProject.Tests
             _matchRepo = Substitute.For<IMatchRepo>();
             _controller = new MatchController(_matchRepo);
         }
-
+        
         private void SetupMatch(int id, string scores)
         {
             var match = new Match
@@ -69,6 +69,13 @@ namespace CoachingProject.Tests
             Assert.That(result, Is.EqualTo("1:1 (First Half)"));
             _matchRepo.Received(1).UpdateMatch(MatchId, "HA");
             _matchRepo.Received(1).GetMatch(MatchId);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _matchRepo = null;
+            _controller = null;
         }
     }
 }
