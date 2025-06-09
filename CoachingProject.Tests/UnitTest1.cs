@@ -2,6 +2,7 @@ using System.Reflection.Metadata;
 using NUnit.Framework;
 using CoachingProject;
 using NSubstitute;
+using System;
 
 namespace CoachingProject.Tests
 {
@@ -68,6 +69,62 @@ namespace CoachingProject.Tests
             // Assert
             Assert.That(result, Is.EqualTo("1:1 (First Half)"));
             _matchRepo.Received(1).UpdateMatch(MatchId, "HA");
+            _matchRepo.Received(1).GetMatch(MatchId);
+        }
+
+        [Test]
+        public void UpdateMatch_WhenCancelHomeGoal_InFH_From1to0()
+        {
+            // Arrange
+            SetupMatch(MatchId, "H");
+            SetupUpdateMatch(MatchId, string.Empty);
+            var matchEvent = MatchEvent.CancelHomeGoal;
+
+            // Act
+            var result = _controller.UpdateMatch(MatchId, matchEvent);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("0:0 (First Half)"));
+            _matchRepo.Received(1).UpdateMatch(MatchId, string.Empty);
+            _matchRepo.Received(1).GetMatch(MatchId);
+        }
+
+        [Test]
+        public void UpdateMatch_WhenCancelHomeGoal_LastIsAwayGoal_ThrowsException()
+        {
+            // Arrange
+            SetupMatch(MatchId, "A");
+            var matchEvent = MatchEvent.CancelHomeGoal;
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => _controller.UpdateMatch(MatchId, matchEvent));
+        }
+
+        [Test]
+        public void UpdateMatch_WhenCancelHomeGoal_LastIsSemicolonAndBeforeIsAwayGoal_ThrowsException()
+        {
+            // Arrange
+            SetupMatch(MatchId, "A;");
+            var matchEvent = MatchEvent.CancelHomeGoal;
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => _controller.UpdateMatch(MatchId, matchEvent));
+        }
+
+        [Test]
+        public void UpdateMatch_WhenCancelHomeGoal_LastIsSemicolonAndBeforeIsHomeGoal_RemovesHomeGoal()
+        {
+            // Arrange
+            SetupMatch(MatchId, "H;");
+            SetupUpdateMatch(MatchId, ";");
+            var matchEvent = MatchEvent.CancelHomeGoal;
+
+            // Act
+            var result = _controller.UpdateMatch(MatchId, matchEvent);
+
+            // Assert
+            Assert.That(result, Is.EqualTo("0:0 (Second Half)"));
+            _matchRepo.Received(1).UpdateMatch(MatchId, ";");
             _matchRepo.Received(1).GetMatch(MatchId);
         }
 

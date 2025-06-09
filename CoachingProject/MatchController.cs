@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace CoachingProject
 {
@@ -15,10 +16,21 @@ namespace CoachingProject
             var match = matchRepo.GetMatch(matchId);
             
             var matchScore = match.Scores;
+            
             matchScore = matchEvent switch
             {
                 MatchEvent.HomeGoal => matchScore + "H",
                 MatchEvent.AwayGoal => matchScore + "A",
+                MatchEvent.CancelHomeGoal =>
+                    matchScore.Length > 0 && matchScore[^1] == ';'
+                        ? (matchScore.Length > 1 && matchScore[^2] == 'A'
+                            ? throw new InvalidOperationException("Cannot cancel home goal when last event is away goal.")
+                            : (matchScore.Length > 1 && matchScore[^2] == 'H'
+                                ? matchScore.Remove(matchScore.Length - 2, 1)
+                                : matchScore))
+                        : (matchScore.Length > 0 && matchScore[^1] == 'A'
+                            ? throw new InvalidOperationException("Cannot cancel home goal when last event is away goal.")
+                            : (matchScore.EndsWith("H") ? matchScore[..^1] : matchScore)),
                 _ => matchScore
             };
 
