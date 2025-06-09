@@ -6,7 +6,7 @@ namespace CoachingProject
     public interface IMatchRepo
     {
         Match GetMatch(int matchId);
-        Match UpdateMatch(int matchId, string matchScore);
+        Match UpdateMatch(int matchId, string Scores);
     }
 
     public enum MatchEvent
@@ -24,6 +24,36 @@ namespace CoachingProject
         public int Id { get; set; }
         
         public string Scores { get; set; }
+
+        public string HandleEvent(MatchEvent matchEvent)
+        {
+             return matchEvent switch
+            {
+                MatchEvent.HomeGoal => Scores + "H",
+                MatchEvent.AwayGoal => Scores + "A",
+                MatchEvent.CancelHomeGoal =>
+                    Scores.Length > 0 && Scores[^1] == ';'
+                        ? (Scores.Length > 1 && Scores[^2] == 'A'
+                            ? throw new InvalidOperationException("Cannot cancel home goal when last event is away goal.")
+                            : (Scores.Length > 1 && Scores[^2] == 'H'
+                                ? Scores.Remove(Scores.Length - 2, 1)
+                                : Scores))
+                        : (Scores.Length > 0 && Scores[^1] == 'A'
+                            ? throw new InvalidOperationException("Cannot cancel home goal when last event is away goal.")
+                            : (Scores.EndsWith("H") ? Scores[..^1] : Scores)),
+                MatchEvent.CancelAwayGoal =>
+                    Scores.Length > 0 && Scores[^1] == ';'
+                        ? (Scores.Length > 1 && Scores[^2] == 'H'
+                            ? throw new InvalidOperationException("Cannot cancel away goal when last event is home goal.")
+                            : (Scores.Length > 1 && Scores[^2] == 'A'
+                                ? Scores.Remove(Scores.Length - 2, 1)
+                                : Scores))
+                        : (Scores.Length > 0 && Scores[^1] == 'H'
+                            ? throw new InvalidOperationException("Cannot cancel away goal when last event is home goal.")
+                            : (Scores.EndsWith("A") ? Scores[..^1] : Scores)),
+                _ => Scores
+            };
+        }
 
         public string GetScoreResult()
         {

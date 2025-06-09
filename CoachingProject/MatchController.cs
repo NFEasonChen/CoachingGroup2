@@ -14,42 +14,14 @@ namespace CoachingProject
         public string UpdateMatch(int matchId, MatchEvent matchEvent)
         {
             var match = matchRepo.GetMatch(matchId);
-            
-            var matchScore = match.Scores;
-            
-            matchScore = matchEvent switch
-            {
-                MatchEvent.HomeGoal => matchScore + "H",
-                MatchEvent.AwayGoal => matchScore + "A",
-                MatchEvent.CancelHomeGoal =>
-                    matchScore.Length > 0 && matchScore[^1] == ';'
-                        ? (matchScore.Length > 1 && matchScore[^2] == 'A'
-                            ? throw new InvalidOperationException("Cannot cancel home goal when last event is away goal.")
-                            : (matchScore.Length > 1 && matchScore[^2] == 'H'
-                                ? matchScore.Remove(matchScore.Length - 2, 1)
-                                : matchScore))
-                        : (matchScore.Length > 0 && matchScore[^1] == 'A'
-                            ? throw new InvalidOperationException("Cannot cancel home goal when last event is away goal.")
-                            : (matchScore.EndsWith("H") ? matchScore[..^1] : matchScore)),
-                MatchEvent.CancelAwayGoal =>
-                    matchScore.Length > 0 && matchScore[^1] == ';'
-                        ? (matchScore.Length > 1 && matchScore[^2] == 'H'
-                            ? throw new InvalidOperationException("Cannot cancel away goal when last event is home goal.")
-                            : (matchScore.Length > 1 && matchScore[^2] == 'A'
-                                ? matchScore.Remove(matchScore.Length - 2, 1)
-                                : matchScore))
-                        : (matchScore.Length > 0 && matchScore[^1] == 'H'
-                            ? throw new InvalidOperationException("Cannot cancel away goal when last event is home goal.")
-                            : (matchScore.EndsWith("A") ? matchScore[..^1] : matchScore)),
-                _ => matchScore
-            };
+
+            var score= match.HandleEvent(matchEvent);
 
             // What happen if we have xx dupplicated request
-            var updatedMatch = matchRepo.UpdateMatch(matchId, matchScore);
+            var updatedMatch = matchRepo.UpdateMatch(matchId, score);
+           
             // 2. logic to put "H" -> "1:0 (First Half)"
-
-            
             return updatedMatch.GetScoreResult();
         }
     }
-} 
+}
