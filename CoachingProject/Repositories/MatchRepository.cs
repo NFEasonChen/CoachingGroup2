@@ -10,7 +10,7 @@ namespace CoachingProject.Repositories
         public Task<Match> GetMatchAsync(int matchId)
         {
             _matches.TryGetValue(matchId, out var match);
-            // Return a dummy match if not found for demonstration
+        
             return Task.FromResult(match ?? new Match { Id = matchId, Scores = string.Empty });
         }
 
