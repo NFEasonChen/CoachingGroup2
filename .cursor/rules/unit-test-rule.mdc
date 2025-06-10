@@ -5,50 +5,51 @@ alwaysApply: false
 ---
 # C# Unit Testing Rules 
 
-## 測試檔案命名規範
-- 測試類別名稱: {ClassName}Tests
-- 測試方法名稱: 使用 snake_case 格式: {action}_{condition}_{expected_result}
-  例如: cancel_home_goal_succeed_when_1_to_1_at_second_half
-- 測試檔案位置: tests/{ProjectName}.Tests/{相對應的資料夾結構}
+## Test File Naming Conventions
+- Test class name: {ClassName}Tests
+- Test method name: Use snake_case format: {action}_{condition}_{expected_result}
+   Example: cancel_home_goal_succeed_when_1_to_1_at_second_half
+- Test file location: tests/{ProjectName}.Tests/{corresponding folder structure}
 
-## 測試類別結構
-每個測試類別必須包含:
-1. [TestFixture] 屬性
-2. 私有欄位用於 Mock 物件 (使用底線前綴命名: _mockRepo)
-3. 私有欄位用於常數值 (如: _defaultMatchId)
-4. Setup 方法 ([SetUp]) 初始化 Mock 和被測試物件
-5. 被測試的類別實例
-6. Helper 方法用於設定測試資料 (Given...)
-7. Helper 方法用於驗證結果 (Should...)
-## 測試方法結構
-每個測試方法遵循以下模式:
-1. 使用 Given... 方法設定測試前置條件
-2. 執行被測試的方法
-3. 使用 FluentAssertions 進行斷言
-4. 使用 Should... 方法驗證互動
+## Test Class Structure
+Each test class must include:
+1. [TestFixture] attribute
+2. Private fields for mock objects (use underscore prefix: _mockRepo)
+3. Private fields for constant values (e.g., _defaultMatchId)
+4. Setup method ([SetUp]) to initialize mocks and the class under test
+5. Instance of the class under test
+6. Helper methods for setting up test data (Given...)
+7. Helper methods for verifying results (Should...)
 
-## Helper 方法命名規範
-- Given 方法: 用於設定測試前置條件
-  例如: GivenMatchScores(string matchScores)
-- Should 方法: 用於驗證測試結果
-  例如: ShouldUpdateNewScoresToRepo(string newMatchScores)
+## Test Method Structure
+Each test method should follow this pattern:
+1. Use Given... methods to set up preconditions
+2. Execute the method under test
+3. Use FluentAssertions for assertions
+4. Use Should... methods to verify interactions
 
-## Mock 物件規範
-- Mock 欄位使用底線前綴: _mockRepository, _matchRepo
-- 使用 NSubstitute 建立 Mock: Substitute.For<IInterface>()
-- Mock 方法回傳值: _mockRepo.Method().Returns(value)
-- 驗證方法呼叫: _mockRepo.Received(1).Method()
-- 驗證複雜參數: Arg.Is<Type>(condition)
+## Helper Method Naming Conventions
+- Given methods: Used to set up test preconditions
+   Example: GivenMatchScores(string matchScores)
+- Should methods: Used to verify test results
+   Example: ShouldUpdateNewScoresToRepo(string newMatchScores)
 
-## 斷言規範
-- 使用 FluentAssertions 進行所有斷言
-- 簡單值比較: result.Should().Be(expected)
-- 例外驗證: action.Should().Throw<ExceptionType>()
-- 例外條件驗證: .Where(exception => exception.Property == expectedValue)
-- 布林驗證: result.Should().BeTrue() / result.Should().BeFalse()
+## Mock Object Conventions
+- Mock fields use underscore prefix: _mockRepository, _matchRepo
+- Use NSubstitute to create mocks: Substitute.For<IInterface>()
+- Mock method return values: _mockRepo.Method().Returns(value)
+- Verify method calls: _mockRepo.Received(1).Method()
+- Verify complex parameters: Arg.Is<Type>(condition)
 
-## 例外測試模式
-對於預期會拋出例外的測試:
+## Assertion Conventions
+- Use FluentAssertions for all assertions
+- Simple value comparison: result.Should().Be(expected)
+- Exception verification: action.Should().Throw<ExceptionType>()
+- Exception property verification: .Where(exception => exception.Property == expectedValue)
+- Boolean verification: result.Should().BeTrue() / result.Should().BeFalse()
+
+## Exception Testing Pattern
+For tests that are expected to throw exceptions:
 ```csharp
 Action action = () => controllerMethod(parameters);
 action.Should().Throw<ExceptionType>()
