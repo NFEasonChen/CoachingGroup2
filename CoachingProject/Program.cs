@@ -1,5 +1,3 @@
-using CoachingProject.Repositories;
-using CoachingProject.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,9 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<IMatchRepository, MatchRepository>();
-builder.Services.AddScoped<IMatchService, MatchService>();
 
 builder.Services.AddControllers();
 
