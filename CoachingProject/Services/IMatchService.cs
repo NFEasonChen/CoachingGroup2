@@ -5,5 +5,5 @@ namespace CoachingProject.Services;
 
 public interface IMatchService
 {
-    Match UpdateMatch(int matchId, MatchEvent matchEvent);
+    Task<Match> UpdateMatch(int matchId, MatchEvent matchEvent);
 }

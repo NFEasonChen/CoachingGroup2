@@ -1,6 +1,7 @@
 using CoachingProject.Enums;
 using CoachingProject.Repositories;
 using CoachingProject.Models;
+using System.Threading.Tasks;
 
 namespace CoachingProject.Services
 {
@@ -9,11 +10,11 @@ namespace CoachingProject.Services
         /// <summary>
         /// Handles updating a match with a new event and returns the updated match.
         /// </summary>
-        public Match UpdateMatch(int matchId, MatchEvent matchEvent)
+        public async Task<Match> UpdateMatch(int matchId, MatchEvent matchEvent)
         {
-            var match = matchRepo.GetMatch(matchId);
+            var match = await matchRepo.GetMatchAsync(matchId);
             var score = match.HandleEvent(matchEvent);
-            var updatedMatch = matchRepo.UpdateMatch(matchId, score);
+            var updatedMatch = await matchRepo.UpdateMatchAsync(matchId, score);
             return updatedMatch;
         }
     }

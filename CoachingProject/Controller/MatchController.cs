@@ -12,9 +12,9 @@ namespace CoachingProject.Controller
         /// Updates a match event by match ID.
         /// </summary>
         [HttpPost]
-        public string UpdateMatch(int matchId, MatchEvent matchEvent)
+        public async Task<string> UpdateMatch(int matchId, MatchEvent matchEvent)
         {
-            var updatedMatch = matchService.UpdateMatch(matchId, matchEvent);
+            var updatedMatch = await matchService.UpdateMatch(matchId, matchEvent);
             return updatedMatch.GetScoreResult();
         }
     }
