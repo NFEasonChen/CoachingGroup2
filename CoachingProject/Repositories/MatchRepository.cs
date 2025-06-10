@@ -14,10 +14,9 @@ namespace CoachingProject.Repositories
             return Task.FromResult(match ?? new Match { Id = matchId, Scores = string.Empty });
         }
 
-        public Task UpdateMatchAsync(int matchId, string scores)
+        public Task UpdateMatchAsync(Match match)
         {
-            var match = new Match { Id = matchId, Scores = scores };
-            _matches[matchId] = match;
+            _matches[match.Id] = match;
             return Task.CompletedTask;
         }
     }

@@ -15,7 +15,7 @@ namespace CoachingProject.Services
             
             match.HandleEvent(matchEvent);
             
-            await matchRepository.UpdateMatchAsync(matchId, match.Scores);
+            await matchRepository.UpdateMatchAsync(match);
             
             return match;
         }

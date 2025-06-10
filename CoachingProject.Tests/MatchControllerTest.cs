@@ -33,21 +33,12 @@ namespace CoachingProject.Tests
             _matchRepo.GetMatchAsync(id).Returns(Task.FromResult(match));
         }
 
-        private void SetupUpdateMatch(int id, string newScores)
-        {
-            _matchRepo.UpdateMatchAsync(id, newScores).Returns(Task.FromResult(new Match
-            {
-                Id = id,
-                Scores = newScores
-            }));
-        }
-
         [Test]
         public async Task UpdateMatch_WhenHomeGoal_FirstTimeInFH_From0to0()
         {
             // Arrange
             SetupMatch(MatchId, string.Empty);
-            SetupUpdateMatch(MatchId, "H");
+           
             var matchEvent = MatchEvent.HomeGoal;
 
             // Act
@@ -55,7 +46,6 @@ namespace CoachingProject.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo("1:0 (First Half)"));
-            await _matchRepo.Received(1).UpdateMatchAsync(MatchId, "H");
             await _matchRepo.Received(1).GetMatchAsync(MatchId);
         }
 
@@ -64,7 +54,6 @@ namespace CoachingProject.Tests
         {
             // Arrange
             SetupMatch(MatchId, "H");
-            SetupUpdateMatch(MatchId, "HA");
             var matchEvent = MatchEvent.AwayGoal;
 
             // Act
@@ -72,7 +61,6 @@ namespace CoachingProject.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo("1:1 (First Half)"));
-            await _matchRepo.Received(1).UpdateMatchAsync(MatchId, "HA");
             await _matchRepo.Received(1).GetMatchAsync(MatchId);
         }
 
@@ -81,7 +69,6 @@ namespace CoachingProject.Tests
         {
             // Arrange
             SetupMatch(MatchId, "H");
-            SetupUpdateMatch(MatchId, string.Empty);
             var matchEvent = MatchEvent.CancelHomeGoal;
 
             // Act
@@ -89,7 +76,6 @@ namespace CoachingProject.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo("0:0 (First Half)"));
-            await _matchRepo.Received(1).UpdateMatchAsync(MatchId, string.Empty);
             await _matchRepo.Received(1).GetMatchAsync(MatchId);
         }
 
@@ -120,7 +106,6 @@ namespace CoachingProject.Tests
         {
             // Arrange
             SetupMatch(MatchId, "H;");
-            SetupUpdateMatch(MatchId, ";");
             var matchEvent = MatchEvent.CancelHomeGoal;
 
             // Act
@@ -128,7 +113,6 @@ namespace CoachingProject.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo("0:0 (Second Half)"));
-            await _matchRepo.Received(1).UpdateMatchAsync(MatchId, ";");
             await _matchRepo.Received(1).GetMatchAsync(MatchId);
         }
 
@@ -137,7 +121,6 @@ namespace CoachingProject.Tests
         {
             // Arrange
             SetupMatch(MatchId, "A");
-            SetupUpdateMatch(MatchId, string.Empty);
             var matchEvent = MatchEvent.CancelAwayGoal;
 
             // Act
@@ -145,7 +128,6 @@ namespace CoachingProject.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo("0:0 (First Half)"));
-            await _matchRepo.Received(1).UpdateMatchAsync(MatchId, string.Empty);
             await _matchRepo.Received(1).GetMatchAsync(MatchId);
         }
 
@@ -176,7 +158,6 @@ namespace CoachingProject.Tests
         {
             // Arrange
             SetupMatch(MatchId, "A;");
-            SetupUpdateMatch(MatchId, ";");
             var matchEvent = MatchEvent.CancelAwayGoal;
 
             // Act
@@ -184,7 +165,6 @@ namespace CoachingProject.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo("0:0 (Second Half)"));
-            await _matchRepo.Received(1).UpdateMatchAsync(MatchId, ";");
             await _matchRepo.Received(1).GetMatchAsync(MatchId);
         }
 
@@ -193,7 +173,6 @@ namespace CoachingProject.Tests
         {
             // Arrange
             SetupMatch(MatchId, "HA");
-            SetupUpdateMatch(MatchId, "HA;");
             var matchEvent = MatchEvent.NextPeriod;
 
             // Act
@@ -201,7 +180,6 @@ namespace CoachingProject.Tests
 
             // Assert
             Assert.That(result, Is.EqualTo("1:1 (Second Half)"));
-            await _matchRepo.Received(1).UpdateMatchAsync(MatchId, "HA;");
             await _matchRepo.Received(1).GetMatchAsync(MatchId);
         }
 
