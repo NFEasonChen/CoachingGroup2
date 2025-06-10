@@ -6,37 +6,58 @@ public class Match
 {
     public int Id { get; set; }
         
-    public string Scores { get; set; }
+    public required string Scores { get; set; }
 
-    public string HandleEvent(MatchEvent matchEvent)
+    public void HandleEvent(MatchEvent matchEvent)
     {
-        return matchEvent switch
+        switch (matchEvent)
         {
-            MatchEvent.HomeGoal => Scores + "H",
-            MatchEvent.AwayGoal => Scores + "A",
-            MatchEvent.CancelHomeGoal =>
-                Scores.Length > 0 && Scores[^1] == ';'
-                    ? (Scores.Length > 1 && Scores[^2] == 'A'
-                        ? throw new InvalidOperationException("Cannot cancel home goal when last event is away goal.")
-                        : (Scores.Length > 1 && Scores[^2] == 'H'
-                            ? Scores.Remove(Scores.Length - 2, 1)
-                            : Scores))
-                    : (Scores.Length > 0 && Scores[^1] == 'A'
-                        ? throw new InvalidOperationException("Cannot cancel home goal when last event is away goal.")
-                        : (Scores.EndsWith("H") ? Scores[..^1] : Scores)),
-            MatchEvent.CancelAwayGoal =>
-                Scores.Length > 0 && Scores[^1] == ';'
-                    ? (Scores.Length > 1 && Scores[^2] == 'H'
-                        ? throw new InvalidOperationException("Cannot cancel away goal when last event is home goal.")
-                        : (Scores.Length > 1 && Scores[^2] == 'A'
-                            ? Scores.Remove(Scores.Length - 2, 1)
-                            : Scores))
-                    : (Scores.Length > 0 && Scores[^1] == 'H'
-                        ? throw new InvalidOperationException("Cannot cancel away goal when last event is home goal.")
-                        : (Scores.EndsWith("A") ? Scores[..^1] : Scores)),
-            MatchEvent.NextPeriod => Scores + ";",
-            _ => Scores
-        };
+            case MatchEvent.HomeGoal:
+                Scores += "H";
+                break;
+            case MatchEvent.AwayGoal:
+                Scores += "A";
+                break;
+            case MatchEvent.CancelHomeGoal:
+                if (Scores.Length > 0 && Scores[^1] == ';')
+                {
+                    if (Scores.Length > 1 && Scores[^2] == 'A')
+                        throw new InvalidOperationException("Cannot cancel home goal when last event is away goal.");
+                    else if (Scores.Length > 1 && Scores[^2] == 'H')
+                        Scores = Scores.Remove(Scores.Length - 2, 1);
+                }
+                else if (Scores.Length > 0 && Scores[^1] == 'A')
+                {
+                    throw new InvalidOperationException("Cannot cancel home goal when last event is away goal.");
+                }
+                else if (Scores.EndsWith("H"))
+                {
+                    Scores = Scores[..^1];
+                }
+                break;
+            case MatchEvent.CancelAwayGoal:
+                if (Scores.Length > 0 && Scores[^1] == ';')
+                {
+                    if (Scores.Length > 1 && Scores[^2] == 'H')
+                        throw new InvalidOperationException("Cannot cancel away goal when last event is home goal.");
+                    else if (Scores.Length > 1 && Scores[^2] == 'A')
+                        Scores = Scores.Remove(Scores.Length - 2, 1);
+                }
+                else if (Scores.Length > 0 && Scores[^1] == 'H')
+                {
+                    throw new InvalidOperationException("Cannot cancel away goal when last event is home goal.");
+                }
+                else if (Scores.EndsWith("A"))
+                {
+                    Scores = Scores[..^1];
+                }
+                break;
+            case MatchEvent.NextPeriod:
+                Scores += ";";
+                break;
+            default:
+                break;
+        }
     }
 
     public string GetScoreResult()

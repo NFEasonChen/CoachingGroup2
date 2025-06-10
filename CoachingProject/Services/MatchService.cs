@@ -1,21 +1,23 @@
 using CoachingProject.Enums;
 using CoachingProject.Repositories;
 using CoachingProject.Models;
-using System.Threading.Tasks;
 
 namespace CoachingProject.Services
 {
-    public class MatchService(IMatchRepository matchRepo):IMatchService
+    public class MatchService(IMatchRepository matchRepository):IMatchService
     {
         /// <summary>
         /// Handles updating a match with a new event and returns the updated match.
         /// </summary>
         public async Task<Match> UpdateMatch(int matchId, MatchEvent matchEvent)
         {
-            var match = await matchRepo.GetMatchAsync(matchId);
-            var score = match.HandleEvent(matchEvent);
-            var updatedMatch = await matchRepo.UpdateMatchAsync(matchId, score);
-            return updatedMatch;
+            var match = await matchRepository.GetMatchAsync(matchId);
+            
+            match.HandleEvent(matchEvent);
+            
+            await matchRepository.UpdateMatchAsync(matchId, match.Scores);
+            
+            return match;
         }
     }
 } 

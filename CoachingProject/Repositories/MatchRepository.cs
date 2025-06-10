@@ -14,11 +14,11 @@ namespace CoachingProject.Repositories
             return Task.FromResult(match ?? new Match { Id = matchId, Scores = string.Empty });
         }
 
-        public Task<Match> UpdateMatchAsync(int matchId, string scores)
+        public Task UpdateMatchAsync(int matchId, string scores)
         {
             var match = new Match { Id = matchId, Scores = scores };
             _matches[matchId] = match;
-            return Task.FromResult(match);
+            return Task.CompletedTask;
         }
     }
 } 

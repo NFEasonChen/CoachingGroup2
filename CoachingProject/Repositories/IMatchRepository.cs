@@ -5,6 +5,6 @@ namespace CoachingProject.Repositories
     public interface IMatchRepository
     {
         Task<Match> GetMatchAsync(int matchId);
-        Task<Match> UpdateMatchAsync(int matchId, string scores);
+        Task UpdateMatchAsync(int matchId, string scores);
     }
 }
