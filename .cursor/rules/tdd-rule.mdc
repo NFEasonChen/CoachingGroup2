@@ -20,9 +20,3 @@ This is a C# Test-Driven Development (TDD) project using NUnit testing framework
 2. **Expresses intent** - Code clearly communicates its purpose
 3. **No duplication** - Eliminate code and concept duplication
 4. **Minimal elements** - Fewest classes, methods, properties needed
-
-### IPO Model Application
-Every method/feature must clearly define:
-- **Input**: Parameters, dependencies, preconditions
-- **Process**: Core logic, algorithms, business rules
-- **Output**: Return values, side effects, postconditions
