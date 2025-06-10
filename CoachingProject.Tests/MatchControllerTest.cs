@@ -2,6 +2,7 @@ using CoachingProject.Controller;
 using CoachingProject.Enums;
 using CoachingProject.Models;
 using CoachingProject.Repositories;
+using CoachingProject.Services;
 using NSubstitute;
 
 namespace CoachingProject.Tests
@@ -10,13 +11,15 @@ namespace CoachingProject.Tests
     {
         private const int MatchId = 91;
         private IMatchRepository _matchRepo;
+        private IMatchService _matchService;
         private MatchController _controller;
 
         [SetUp]
         public void SetUp()
         {
             _matchRepo = Substitute.For<IMatchRepository>();
-            _controller = new MatchController(_matchRepo);
+            _matchService = new MatchService(_matchRepo);
+            _controller = new MatchController(_matchService);
         }
         
         private void SetupMatch(int id, string scores)
@@ -205,6 +208,7 @@ namespace CoachingProject.Tests
         public void TearDown()
         {
             _matchRepo = null;
+            _matchService = null;
             _controller = null;
         }
     }
