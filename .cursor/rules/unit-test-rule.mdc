@@ -55,9 +55,9 @@ Action action = () => controllerMethod(parameters);
 action.Should().Throw<ExceptionType>()
     .Where(exception => exception.Property1 == value1 
                      && exception.Property2 == value2);       
+```
 
 ## Core Development Philosophy
-
 ### TDD Red-Green-Refactor Cycle
 1. **RED**: Always write a failing NUnit test first
 2. **GREEN**: Write minimal C# code to pass the test
