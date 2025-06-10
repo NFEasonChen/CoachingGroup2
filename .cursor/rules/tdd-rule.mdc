@@ -1,5 +1,5 @@
 ---
-description: 
+description: This rule defines the naming conventions, structure, and best practices for writing unit tests in C#. It covers test file and class naming, method naming (using snake_case), file organization, and the required structure for test classes and methods. It also specifies the use of NSubstitute for mocking, FluentAssertions for assertions, and provides patterns for helper methods and exception testing. The goal is to ensure consistency, readability, and reliability in all unit tests across the codebase.
 globs: 
 alwaysApply: false
 ---
