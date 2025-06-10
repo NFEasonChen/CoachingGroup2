@@ -1,3 +1,7 @@
+using CoachingProject.Controller;
+using CoachingProject.Enums;
+using CoachingProject.Models;
+using CoachingProject.Repositories;
 using NSubstitute;
 
 namespace CoachingProject.Tests
@@ -5,13 +9,13 @@ namespace CoachingProject.Tests
     public class MatchControllerTests
     {
         private const int MatchId = 91;
-        private IMatchRepo _matchRepo;
+        private IMatchRepository _matchRepo;
         private MatchController _controller;
 
         [SetUp]
         public void SetUp()
         {
-            _matchRepo = Substitute.For<IMatchRepo>();
+            _matchRepo = Substitute.For<IMatchRepository>();
             _controller = new MatchController(_matchRepo);
         }
         

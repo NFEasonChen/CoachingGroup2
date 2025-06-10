@@ -1,11 +1,12 @@
+using CoachingProject.Enums;
+using CoachingProject.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
-namespace CoachingProject
+namespace CoachingProject.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class MatchController(IMatchRepo matchRepo) : ControllerBase
+    public class MatchController(IMatchRepository matchRepo) : ControllerBase
     {
         /// <summary>
         /// Updates a match event by match ID.
