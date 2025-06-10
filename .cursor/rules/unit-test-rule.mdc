@@ -54,4 +54,17 @@ For tests that are expected to throw exceptions:
 Action action = () => controllerMethod(parameters);
 action.Should().Throw<ExceptionType>()
     .Where(exception => exception.Property1 == value1 
-                     && exception.Property2 == value2);                     
+                     && exception.Property2 == value2);       
+
+## Core Development Philosophy
+
+### TDD Red-Green-Refactor Cycle
+1. **RED**: Always write a failing NUnit test first
+2. **GREEN**: Write minimal C# code to pass the test
+3. **REFACTOR**: Improve code while keeping tests green
+
+### Simple Design Principles (Priority Order)
+1. **Passes all tests** - All NUnit tests must pass
+2. **Expresses intent** - Code clearly communicates its purpose
+3. **No duplication** - Eliminate code and concept duplication
+4. **Minimal elements** - Fewest classes, methods, properties needed              
